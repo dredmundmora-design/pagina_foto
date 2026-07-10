@@ -1,0 +1,55 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const series = [
+  { titulo: "Retratos", año: "2025", slug: "retratos" },
+  { titulo: "Documental", año: "2024–2025", slug: "documental" },
+  { titulo: "Social", año: "2025", slug: "social" },
+];
+---
+
+<Layout title="Portafolio">
+  <section class="container portfolio-header">
+    <h1>Portafolio</h1>
+  </section>
+
+  <section class="container series-grid">
+    {series.map((s, i) => (
+      <a href={`/portafolio/${s.slug}`} class="series-card">
+        <div class="series-card__placeholder">
+          <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
+        </div>
+        <h2>{s.titulo}</h2>
+        <span class="mono-label">{s.año}</span>
+      </a>
+    ))}
+  </section>
+
+  <style>
+    .portfolio-header {
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-sm);
+    }
+    .series-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-md);
+      padding-top: var(--space-md);
+      padding-bottom: var(--space-xl);
+    }
+    .series-card {
+      display: block;
+    }
+    .series-card__placeholder {
+      aspect-ratio: 4 / 5;
+      background: var(--color-grey-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-xs);
+    }
+    .series-card h2 {
+      margin-top: var(--space-xs);
+    }
+  </style>
+</Layout>

@@ -1,0 +1,82 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+export function getStaticPaths() {
+  const series = [
+    {
+      slug: "retratos",
+      titulo: "Retratos",
+      año: "2025",
+      descripcion: "Una serie de retratos en blanco y negro.",
+      fotos: 6,
+    },
+    {
+      slug: "documental",
+      titulo: "Documental",
+      año: "2024–2025",
+      descripcion: "Registro documental de momentos cotidianos.",
+      fotos: 6,
+    },
+    {
+      slug: "social",
+      titulo: "Social",
+      año: "2025",
+      descripcion: "Fotografía social: encuentros, celebraciones y vida en comunidad.",
+      fotos: 6,
+    },
+  ];
+
+  return series.map((serie) => ({
+    params: { slug: serie.slug },
+    props: { serie },
+  }));
+}
+
+const { serie } = Astro.props;
+---
+
+<Layout title={serie.titulo}>
+  <section class="container serie-header">
+    <a href="/portafolio" class="mono-label back-link">← Portafolio</a>
+    <h1>{serie.titulo}</h1>
+    <p class="serie-descripcion">{serie.descripcion}</p>
+    <span class="mono-label">{serie.año}</span>
+  </section>
+
+  <section class="container foto-grid">
+    {Array.from({ length: serie.fotos }).map((_, i) => (
+      <div class="foto-placeholder">
+        <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
+      </div>
+    ))}
+  </section>
+
+  <style>
+    .serie-header {
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-md);
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: var(--space-md);
+    }
+    .serie-descripcion {
+      max-width: 48ch;
+      margin-top: var(--space-xs);
+      margin-bottom: var(--space-xs);
+    }
+    .foto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--space-sm);
+      padding-bottom: var(--space-xl);
+    }
+    .foto-placeholder {
+      aspect-ratio: 3 / 4;
+      background: var(--color-grey-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</Layout>
