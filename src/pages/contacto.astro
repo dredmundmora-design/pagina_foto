@@ -1,0 +1,41 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Contacto">
+  <section class="container contact">
+    <h1>Contacto</h1>
+    <p class="contact__intro">
+      Si quieres platicar sobre alguna foto, un proyecto, o simplemente
+      saludar, aquí puedes escribirme.
+    </p>
+    <a href="edmundo.morales.photo@gmail.com" class="contact__email">
+      edmundo.morales.photo@gmail.com
+    </a>
+  </section>
+
+  <style>
+    .contact {
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-xl);
+      min-height: 50vh;
+    }
+    .contact__intro {
+      max-width: 48ch;
+      margin-top: var(--space-sm);
+      margin-bottom: var(--space-md);
+    }
+    .contact__email {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      border-bottom: 1px solid var(--color-ink);
+      display: inline-block;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .contact__email:hover {
+      color: var(--color-safelight);
+      border-color: var(--color-safelight);
+    }
+  </style>
+</Layout>

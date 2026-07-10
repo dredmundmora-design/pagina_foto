@@ -1,0 +1,50 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Sobre mí">
+  <section class="container about">
+    <div class="about__photo">
+      <span class="mono-label">N.° 000 — tu foto aquí</span>
+    </div>
+    <div class="about__text">
+      <h1>Sobre mí</h1>
+      <p>
+        Escribe aquí tu historia como fotógrafo: cómo empezaste, qué te
+        atrae de la fotografía social, el retrato y el documental, y qué
+        buscas capturar en blanco y negro.
+      </p>
+      <p>
+        Este es un buen espacio para hablar de tu enfoque y tu forma de
+        acercarte a las personas y los momentos que fotografías.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--space-lg);
+      align-items: start;
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-xl);
+    }
+    .about__photo {
+      aspect-ratio: 3 / 4;
+      background: var(--color-grey-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .about__text p {
+      max-width: 55ch;
+      margin-top: var(--space-sm);
+    }
+    @media (max-width: 768px) {
+      .about {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</Layout>
