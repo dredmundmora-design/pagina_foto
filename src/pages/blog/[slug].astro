@@ -1,0 +1,55 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const entradas = await getCollection("blog");
+  return entradas.map((entrada) => ({
+    params: { slug: entrada.id },
+    props: { entrada },
+  }));
+}
+
+const { entrada } = Astro.props;
+const { Content } = await render(entrada);
+---
+
+<Layout title={entrada.data.titulo}>
+  <article class="container post">
+    <a href="/blog" class="mono-label back-link">← Blog</a>
+    <span class="mono-label">
+      {entrada.data.fecha.toLocaleDateString("es-MX", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}
+    </span>
+    <h1>{entrada.data.titulo}</h1>
+    <div class="post__content">
+      <Content />
+    </div>
+  </article>
+
+  <style>
+    .post {
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-xl);
+      max-width: 720px;
+    }
+    .back-link {
+      display: block;
+      margin-bottom: var(--space-sm);
+    }
+    .post h1 {
+      margin-top: var(--space-xs);
+      margin-bottom: var(--space-md);
+    }
+    .post__content {
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+    .post__content :global(p) {
+      margin-bottom: var(--space-sm);
+    }
+  </style>
+</Layout>

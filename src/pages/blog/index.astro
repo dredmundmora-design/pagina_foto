@@ -1,0 +1,57 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const entradas = await getCollection("blog");
+const ordenadas = entradas.sort(
+  (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf()
+);
+---
+
+<Layout title="Blog">
+  <section class="container blog-header">
+    <h1>Blog</h1>
+  </section>
+
+  <section class="container blog-list">
+    {ordenadas.map((entrada, i) => (
+      <a href={`/blog/${entrada.id}`} class="blog-item">
+        <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
+        <h2>{entrada.data.titulo}</h2>
+        <span class="mono-label">
+          {entrada.data.fecha.toLocaleDateString("es-MX", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </span>
+        {entrada.data.resumen && <p>{entrada.data.resumen}</p>}
+      </a>
+    ))}
+  </section>
+
+  <style>
+    .blog-header {
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-sm);
+    }
+    .blog-list {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: var(--space-xl);
+    }
+    .blog-item {
+      display: block;
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--color-grey-200);
+    }
+    .blog-item h2 {
+      margin-top: var(--space-xs);
+    }
+    .blog-item p {
+      margin-top: var(--space-xs);
+      max-width: 60ch;
+      color: var(--color-grey-600);
+    }
+  </style>
+</Layout>
