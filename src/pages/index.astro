@@ -1,11 +1,84 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const series = [
+  { titulo: "Retratos", año: "2025", slug: "retratos" },
+  { titulo: "Documental", año: "2024–2025", slug: "documental" },
+  { titulo: "Social", año: "2025", slug: "social" },
+];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Inicio">
+  <section class="hero">
+    <div class="hero__placeholder">
+      <span class="mono-label">N.° 001 — imagen destacada aquí</span>
+    </div>
+    <div class="container hero__caption">
+      <h1>Edmundo</h1>
+      <p class="hero__intro">
+        Fotografía social, retrato y documental. Principalmente en blanco y negro.
+      </p>
+    </div>
+  </section>
+
+  <section class="container series-grid">
+    {series.map((s, i) => (
+      <a href={`/portafolio/${s.slug}`} class="series-card">
+        <div class="series-card__placeholder">
+          <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
+        </div>
+        <h2>{s.titulo}</h2>
+        <span class="mono-label">{s.año}</span>
+      </a>
+    ))}
+  </section>
+
+  <style>
+    .hero {
+      position: relative;
+      height: 90vh;
+      display: flex;
+      align-items: flex-end;
+      background: var(--color-grey-200);
+    }
+    .hero__placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero__caption {
+      position: relative;
+      z-index: 1;
+      padding-bottom: var(--space-lg);
+      color: var(--color-ink);
+    }
+    .hero__intro {
+      font-size: 1.1rem;
+      max-width: 32ch;
+      margin-top: var(--space-xs);
+    }
+    .series-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-md);
+      padding-top: var(--space-xl);
+      padding-bottom: var(--space-xl);
+    }
+    .series-card {
+      display: block;
+    }
+    .series-card__placeholder {
+      aspect-ratio: 4 / 5;
+      background: var(--color-grey-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-xs);
+    }
+    .series-card h2 {
+      margin-top: var(--space-xs);
+    }
+  </style>
 </Layout>

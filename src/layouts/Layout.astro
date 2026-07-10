@@ -1,23 +1,85 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import "../styles/global.css";
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Fotografía social, retrato y documental." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} — Edmundo Photography</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a href="/" class="site-header__name">Edmundo</a>
+        <nav class="site-header__nav">
+          <a href="/portafolio">Portafolio</a>
+          <a href="/blog">Blog</a>
+          <a href="/sobre-mi">Sobre mí</a>
+          <a href="/contacto">Contacto</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <span class="mono-label">© {new Date().getFullYear()} Edmundo Photography</span>
+        <span class="mono-label">Puebla, México</span>
+      </div>
+    </footer>
+
+    <style>
+      .site-header {
+        padding: var(--space-sm) 0;
+        border-bottom: 1px solid var(--color-grey-200);
+      }
+      .site-header__inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .site-header__name {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+      }
+      .site-header__nav {
+        display: flex;
+        gap: var(--space-md);
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+      .site-header__nav a {
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+      .site-header__nav a:hover {
+        opacity: 1;
+        color: var(--color-safelight);
+      }
+      .site-footer {
+        padding: var(--space-md) 0;
+        border-top: 1px solid var(--color-grey-200);
+        margin-top: var(--space-xl);
+      }
+      .site-footer__inner {
+        display: flex;
+        justify-content: space-between;
+      }
+    </style>
+  </body>
+</html>
