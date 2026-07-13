@@ -38,6 +38,11 @@ const fotos = await Promise.all(
     <div class="serie-anecdota">
       <Content />
     </div>
+    {serie.data.captions && serie.data.captions.length > 0 && (
+      <a href="#indice" class="mono-label captions-nota">
+        Lugar y fecha de cada fotografía al final de esta página ↓
+      </a>
+    )}
   </section>
 
   <section class="container foto-grid">
@@ -62,10 +67,24 @@ const fotos = await Promise.all(
             class="foto-placeholder"
             style={`aspect-ratio: ${i % 3 === 0 ? "4 / 3" : "3 / 4"};`}
           >
-            <span class="mono-label foto-numero">N.° {String(i + 1).padStart(3, "0")}</span>
+            <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
           </div>
         ))}
   </section>
+
+  {serie.data.captions && serie.data.captions.length > 0 && (
+    <section id="indice" class="container captions-list">
+      <h2 class="captions-list__title mono-label">Índice</h2>
+      <ol class="captions-list__items">
+        {serie.data.captions.map((caption, i) => (
+          <li>
+            <span class="mono-label captions-list__num">N.° {String(i + 1).padStart(3, "0")}</span>
+            <span class="captions-list__text">{caption}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
 
   {fotos.length > 0 && (
     <div class="lightbox" data-lightbox>
@@ -101,6 +120,16 @@ const fotos = await Promise.all(
     .serie-anecdota :global(p) {
       margin-bottom: var(--space-sm);
     }
+    .captions-nota {
+      display: inline-block;
+      margin-top: var(--space-md);
+      opacity: 0.75;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .captions-nota:hover {
+      opacity: 1;
+      color: var(--color-safelight);
+    }
     .foto-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -110,9 +139,6 @@ const fotos = await Promise.all(
       padding-bottom: var(--space-xl);
     }
     .foto-item {
-      .foto-numero {
-      color: var(--color-safelight);
-    }
       display: flex;
       flex-direction: column;
       gap: var(--space-xs);
@@ -133,12 +159,42 @@ const fotos = await Promise.all(
     .foto-item:hover :global(img) {
       opacity: 0.85;
     }
+    .foto-numero {
+      color: var(--color-safelight);
+    }
     .foto-placeholder {
       width: 100%;
       background: var(--color-grey-200);
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .captions-list {
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-xl);
+      border-top: 1px solid var(--color-grey-200);
+    }
+    .captions-list__title {
+      margin-bottom: var(--space-sm);
+    }
+    .captions-list__items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .captions-list__items li {
+      display: flex;
+      gap: var(--space-sm);
+      font-size: 0.9rem;
+    }
+    .captions-list__num {
+      flex-shrink: 0;
+      color: var(--color-safelight);
+    }
+    .captions-list__text {
+      color: var(--color-grey-600);
     }
 
     /* Lightbox */

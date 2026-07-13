@@ -16,8 +16,9 @@ const series = defineCollection({
     titulo: z.string(),
     año: z.string(),
     descripcion: z.string(),
-    fotos: z.number().default(6),
+    fotos: z.number().default(12),
     orden: z.number().optional(),
+    captions: z.array(z.string()).optional(),
   }),
 });
 
