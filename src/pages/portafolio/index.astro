@@ -1,11 +1,10 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
 
-const series = [
-  { titulo: "Retratos", año: "2025", slug: "retratos" },
-  { titulo: "Documental", año: "2024–2025", slug: "documental" },
-  { titulo: "Social", año: "2025", slug: "social" },
-];
+const series = (await getCollection("series")).sort(
+  (a, b) => (a.data.orden ?? 0) - (b.data.orden ?? 0)
+);
 ---
 
 <Layout title="Portafolio">
@@ -15,12 +14,12 @@ const series = [
 
   <section class="container series-grid">
     {series.map((s, i) => (
-      <a href={`/portafolio/${s.slug}`} class="series-card">
+      <a href={`/portafolio/${s.id}`} class="series-card">
         <div class="series-card__placeholder">
           <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
         </div>
-        <h2>{s.titulo}</h2>
-        <span class="mono-label">{s.año}</span>
+        <h2>{s.data.titulo}</h2>
+        <span class="mono-label">{s.data.año}</span>
       </a>
     ))}
   </section>

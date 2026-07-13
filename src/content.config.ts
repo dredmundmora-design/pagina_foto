@@ -10,4 +10,15 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const series = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/series" }),
+  schema: z.object({
+    titulo: z.string(),
+    año: z.string(),
+    descripcion: z.string(),
+    fotos: z.number().default(6),
+    orden: z.number().optional(),
+  }),
+});
+
+export const collections = { blog, series };
