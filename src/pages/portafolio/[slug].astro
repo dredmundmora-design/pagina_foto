@@ -43,24 +43,39 @@ const fotos = await Promise.all(
   <section class="container foto-grid">
     {fotos.length > 0
       ? fotos.map((foto, i) => (
-          <div class="foto-item">
+          <button
+            type="button"
+            class="foto-item"
+            data-lightbox-trigger
+            data-index={i}
+          >
             <Image
               src={foto.default}
               alt={`${serie.data.titulo} — fotografía ${i + 1}`}
               loading={i < 3 ? "eager" : "lazy"}
             />
-            <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
-          </div>
+            <span class="mono-label foto-numero">N.° {String(i + 1).padStart(3, "0")}</span>
+          </button>
         ))
       : Array.from({ length: serie.data.fotos }).map((_, i) => (
           <div
             class="foto-placeholder"
             style={`aspect-ratio: ${i % 3 === 0 ? "4 / 3" : "3 / 4"};`}
           >
-            <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
+            <span class="mono-label foto-numero">N.° {String(i + 1).padStart(3, "0")}</span>
           </div>
         ))}
   </section>
+
+  {fotos.length > 0 && (
+    <div class="lightbox" data-lightbox>
+      <button type="button" class="lightbox__close" data-lightbox-close aria-label="Cerrar">✕</button>
+      <button type="button" class="lightbox__prev" data-lightbox-prev aria-label="Anterior">←</button>
+      <img class="lightbox__img" data-lightbox-img src="" alt="" />
+      <button type="button" class="lightbox__next" data-lightbox-next aria-label="Siguiente">→</button>
+      <span class="mono-label lightbox__counter" data-lightbox-counter></span>
+    </div>
+  )}
 
   <style>
     .serie-header {
@@ -95,14 +110,28 @@ const fotos = await Promise.all(
       padding-bottom: var(--space-xl);
     }
     .foto-item {
+      .foto-numero {
+      color: var(--color-safelight);
+    }
       display: flex;
       flex-direction: column;
       gap: var(--space-xs);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      color: inherit;
     }
     .foto-item :global(img) {
       width: 100%;
       height: auto;
       display: block;
+      transition: opacity 0.2s;
+    }
+    .foto-item:hover :global(img) {
+      opacity: 0.85;
     }
     .foto-placeholder {
       width: 100%;
@@ -111,5 +140,111 @@ const fotos = await Promise.all(
       align-items: center;
       justify-content: center;
     }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(27, 25, 23, 0.95);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox.is-open {
+      display: flex;
+    }
+    .lightbox__img {
+      max-width: 88vw;
+      max-height: 82vh;
+      object-fit: contain;
+    }
+    .lightbox__close,
+    .lightbox__prev,
+    .lightbox__next {
+      position: absolute;
+      background: none;
+      border: none;
+      color: var(--color-paper);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: var(--space-sm);
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .lightbox__close:hover,
+    .lightbox__prev:hover,
+    .lightbox__next:hover {
+      opacity: 1;
+      color: var(--color-safelight);
+    }
+    .lightbox__close {
+      top: var(--space-sm);
+      right: var(--space-sm);
+    }
+    .lightbox__prev {
+      left: var(--space-sm);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .lightbox__next {
+      right: var(--space-sm);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .lightbox__counter {
+      position: absolute;
+      bottom: var(--space-sm);
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--color-grey-200);
+    }
   </style>
+
+  <script>
+    const fotos = Array.from(
+      document.querySelectorAll<HTMLButtonElement>("[data-lightbox-trigger]")
+    );
+    const lightbox = document.querySelector<HTMLDivElement>("[data-lightbox]");
+    const imgEl = document.querySelector<HTMLImageElement>("[data-lightbox-img]");
+    const counterEl = document.querySelector<HTMLSpanElement>("[data-lightbox-counter]");
+    let indiceActual = 0;
+
+    function abrir(indice: number) {
+      if (!lightbox || !imgEl || !counterEl || fotos.length === 0) return;
+      indiceActual = (indice + fotos.length) % fotos.length;
+      const imgOriginal = fotos[indiceActual].querySelector("img");
+      if (imgOriginal) {
+        imgEl.src = imgOriginal.src;
+        imgEl.alt = imgOriginal.alt;
+      }
+      counterEl.textContent = `${String(indiceActual + 1).padStart(3, "0")} / ${String(fotos.length).padStart(3, "0")}`;
+      lightbox.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function cerrar() {
+      lightbox?.classList.remove("is-open");
+      document.body.style.overflow = "";
+    }
+
+    fotos.forEach((boton, i) => {
+      boton.addEventListener("click", () => abrir(i));
+    });
+
+    document.querySelector("[data-lightbox-close]")?.addEventListener("click", cerrar);
+    document.querySelector("[data-lightbox-prev]")?.addEventListener("click", () => abrir(indiceActual - 1));
+    document.querySelector("[data-lightbox-next]")?.addEventListener("click", () => abrir(indiceActual + 1));
+
+    lightbox?.addEventListener("click", (e) => {
+      if (e.target === lightbox) cerrar();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (!lightbox?.classList.contains("is-open")) return;
+      if (e.key === "Escape") cerrar();
+      if (e.key === "ArrowLeft") abrir(indiceActual - 1);
+      if (e.key === "ArrowRight") abrir(indiceActual + 1);
+    });
+  </script>
 </Layout>

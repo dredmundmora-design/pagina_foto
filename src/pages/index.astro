@@ -1,22 +1,56 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 const series = (await getCollection("series")).sort(
   (a, b) => (a.data.orden ?? 0) - (b.data.orden ?? 0)
 );
+
+const todasLasImagenes = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/**/*.{jpeg,jpg,JPG,JPEG,png,PNG,webp,WEBP}"
+);
+
+async function obtenerPortada(slug: string) {
+  const carpeta = `../assets/${slug}/`;
+  const ruta = Object.keys(todasLasImagenes)
+    .filter((r) => r.startsWith(carpeta))
+    .sort()[0];
+  if (!ruta) return null;
+  const mod = await todasLasImagenes[ruta]();
+  return mod.default;
+}
+
+const portadas = await Promise.all(series.map((s) => obtenerPortada(s.id)));
 ---
 
-<Layout title="Portafolio">
-  <section class="container portfolio-header">
-    <h1>Portafolio</h1>
+<Layout title="Inicio">
+  <section class="hero">
+    <div class="hero__placeholder">
+      <span class="mono-label">N.° 001 — imagen destacada aquí</span>
+    </div>
+    <div class="container hero__caption">
+      <h1>Edmundo</h1>
+      <p class="hero__intro">
+        Fotografía social, retrato y documental. Principalmente en blanco y negro.
+      </p>
+    </div>
   </section>
 
   <section class="container series-grid">
     {series.map((s, i) => (
       <a href={`/portafolio/${s.id}`} class="series-card">
         <div class="series-card__placeholder">
-          <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
+          {portadas[i] ? (
+            <Image
+              src={portadas[i]}
+              alt={s.data.titulo}
+              class="series-card__img"
+            />
+          ) : (
+            <span class="mono-label">N.° {String(i + 1).padStart(3, "0")}</span>
+          )}
         </div>
         <h2>{s.data.titulo}</h2>
         <span class="mono-label">{s.data.año}</span>
@@ -25,15 +59,36 @@ const series = (await getCollection("series")).sort(
   </section>
 
   <style>
-    .portfolio-header {
-      padding-top: var(--space-lg);
-      padding-bottom: var(--space-sm);
+    .hero {
+      position: relative;
+      height: 90vh;
+      display: flex;
+      align-items: flex-end;
+      background: var(--color-grey-200);
+    }
+    .hero__placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero__caption {
+      position: relative;
+      z-index: 1;
+      padding-bottom: var(--space-lg);
+      color: var(--color-ink);
+    }
+    .hero__intro {
+      font-size: 1.1rem;
+      max-width: 32ch;
+      margin-top: var(--space-xs);
     }
     .series-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: var(--space-md);
-      padding-top: var(--space-md);
+      padding-top: var(--space-xl);
       padding-bottom: var(--space-xl);
     }
     .series-card {
@@ -46,6 +101,17 @@ const series = (await getCollection("series")).sort(
       align-items: center;
       justify-content: center;
       margin-bottom: var(--space-xs);
+      overflow: hidden;
+    }
+    .series-card__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.2s;
+    }
+    .series-card:hover .series-card__img {
+      opacity: 0.85;
     }
     .series-card h2 {
       margin-top: var(--space-xs);
