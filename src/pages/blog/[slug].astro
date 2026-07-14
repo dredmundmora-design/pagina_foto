@@ -48,8 +48,56 @@ const { Content } = await render(entrada);
       font-size: 1.05rem;
       line-height: 1.75;
     }
+    .post__content :global(img) {
+      display: block;
+      width: calc(100% + 4rem);
+      margin-left: -2rem;
+      margin-top: var(--space-lg);
+      margin-bottom: var(--space-xs);
+      max-width: none;
+    }
+    .post__content :global(p:has(img)) {
+      margin-bottom: 0;
+    }
+    @media (max-width: 640px) {
+      .post__content :global(img) {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
     .post__content :global(p) {
       margin-bottom: var(--space-sm);
+    }
+    .post__content :global(img) {
+      display: block;
+      width: calc(100% + 4rem);
+       height: auto;
+      margin-left: -2rem;
+      margin-top: var(--space-lg);
+      margin-bottom: var(--space-xs);
+      max-width: none;
+    }
+    .post__content :global(p:has(img)) {
+      margin-bottom: 0;
+    }
+    .post__content :global(p:has(> em:only-child)) {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-style: normal;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-grey-600);
+      margin-top: 0;
+      margin-bottom: var(--space-md);
+    }
+    .post__content :global(p:has(> em:only-child) em) {
+      font-style: normal;
+    }
+    @media (max-width: 640px) {
+      .post__content :global(img) {
+        width: 100%;
+        margin-left: 0;
+      }
     }
   </style>
 </Layout>
