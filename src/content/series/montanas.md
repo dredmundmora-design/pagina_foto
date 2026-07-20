@@ -1,5 +1,5 @@
 ---
-titulo: "Tres volcanes de México"
+titulo: "Montañas de México"
 año: "2019-2023"
 descripcion: "Imagenes de roca, hielo y unas minisculas sombras, que somos en las montañas."
 fotos: 12
