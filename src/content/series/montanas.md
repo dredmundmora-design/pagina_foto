@@ -1,9 +1,9 @@
 ---
-titulo: "Montañas de México"
+titulo: "Montañas"
 año: "2019-2023"
 descripcion: "Imagenes de roca, hielo y unas minisculas sombras, que somos en las montañas."
 fotos: 12
-orden: 4
+orden: 3
 captions:
   - "Iztaccíhuatl, visto desde el campo base. Parque Nacional Izta-Popo, México, marzo de 2019."
   - "Volcán Popocatépetl visto desde cerca del campamento La Joya, Parque Nacional Izta-Popo, México, Marxo de 2019."
